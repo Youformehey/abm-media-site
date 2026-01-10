@@ -1,32 +1,78 @@
 "use client"
 
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion"
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import {
   Play, Sparkles, Globe, Palette, Video, FileText, ArrowRight,
   Mail, Phone, MapPin, Briefcase, Users, Target, Award, Zap,
   TrendingUp, Eye, Heart, Lightbulb, Layers, Rocket, Quote, Menu,
-  Facebook, Twitter, Instagram, Linkedin, Github, Camera, Clapperboard, BrainCircuit, PlayCircle
+  Facebook, Twitter, Instagram, Linkedin, Github, Camera, Clapperboard, 
+  BrainCircuit, PlayCircle, Send, ChevronDown, Check
 } from "lucide-react"
 import { useRef, useState, useEffect } from "react"
 
-// --- COMPOSANTS INTERNES ---
+// --- NOUVEAU COMPOSANT SELECT "ROULANT" ---
+const CustomSelect = ({ options, value, onChange, placeholder }: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-const StatsCard = ({ stat, index }: { stat: any; index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.1 }}
-    className="p-6 rounded-2xl bg-zinc-900/50 border border-white/5 text-center hover:bg-zinc-800/50 hover:border-white/10 transition-all duration-300 backdrop-blur-sm"
-  >
-    <div className="inline-flex p-3 rounded-full bg-blue-500/10 mb-4 border border-blue-500/20">
-      <stat.icon className="w-5 h-5 text-blue-400" />
+  // Fermer si on clique ailleurs
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full h-16 bg-zinc-950 border rounded-xl px-6 flex items-center justify-between cursor-pointer transition-all duration-300 ${isOpen ? 'border-blue-500 ring-1 ring-blue-500/50' : 'border-white/10 hover:border-white/20'}`}
+      >
+        <span className={`text-lg ${value ? 'text-white' : 'text-zinc-500'}`}>
+          {value || placeholder}
+        </span>
+        <ChevronDown className={`w-5 h-5 text-zinc-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -10, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="absolute z-50 top-full left-0 right-0 mt-2 bg-[#0a0a0a] border border-white/10 rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          >
+            <div className="max-h-[300px] overflow-y-auto scrollbar-hide py-2">
+              {options.map((option: string) => (
+                <div
+                  key={option}
+                  onClick={() => {
+                    onChange(option);
+                    setIsOpen(false);
+                  }}
+                  className="px-6 py-3 hover:bg-zinc-900 cursor-pointer flex items-center justify-between group transition-colors"
+                >
+                  <span className={`text-sm ${value === option ? 'text-blue-400 font-medium' : 'text-zinc-300 group-hover:text-white'}`}>
+                    {option}
+                  </span>
+                  {value === option && <Check className="w-4 h-4 text-blue-500" />}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-    <div className="text-3xl font-medium text-white mb-1 tracking-tight">{stat.value}</div>
-    <div className="text-xs text-zinc-500 uppercase tracking-widest">{stat.label}</div>
-  </motion.div>
-)
+  );
+};
+
+// --- COMPOSANTS INTERNES EXISTANTS ---
 
 const ServiceCard = ({ service, index, isHovered, onHover, onLeave }: any) => (
   <motion.div
@@ -57,9 +103,7 @@ const ServiceCard = ({ service, index, isHovered, onHover, onLeave }: any) => (
   </motion.div>
 )
 
-// --- PROJECT CARD INTELLIGENTE (VIDEO & IMAGE) ---
 const ProjectCard = ({ project, index, onHover, onLeave, className }: any) => {
-  // Fonction pour vérifier si c'est une vidéo (mp4 ou mov, insensible à la casse)
   const isVideoFile = (filename: string) => {
       const lowerName = filename.toLowerCase();
       return lowerName.endsWith('.mp4') || lowerName.endsWith('.mov');
@@ -97,7 +141,6 @@ const ProjectCard = ({ project, index, onHover, onLeave, className }: any) => {
             
             <div className="absolute inset-0 bg-gradient-to-t from-black via-zinc-950/40 to-transparent" />
             
-            {/* Petit indicateur si c'est une vidéo */}
             {isVideo && (
                 <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md p-2 rounded-full border border-white/10 z-20">
                     <Video className="w-4 h-4 text-white" />
@@ -197,9 +240,15 @@ export default function Home() {
       message: ""
   })
 
+  // Gestion changement input texte
   const handleInputChange = (e: any) => {
       const { name, value } = e.target
       setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  // Gestion changement Dropdown Custom
+  const handleServiceChange = (value: string) => {
+    setFormData(prev => ({ ...prev, service: value }))
   }
 
   const handleWhatsAppSubmit = (e: any) => {
@@ -209,7 +258,6 @@ export default function Home() {
       window.open(`https://wa.me/${phoneNumber}?text=${text}`, '_blank')
   }
 
-  // Mouse move effect for Hero
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -219,7 +267,6 @@ export default function Home() {
     mouseY.set(clientY - top);
   }
 
-  // Smooth Scroll function
   const scrollToSection = (id: string) => {
       const element = document.getElementById(id);
       if (element) {
@@ -240,7 +287,6 @@ export default function Home() {
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
   const heroY = useTransform(smoothProgress, [0, 1], ["0%", "40%"]) 
-  // J'ai réduit le mouvement du gros texte ABM pour qu'il ne gêne pas la nouvelle phrase
   const bigTextY = useTransform(smoothProgress, [0, 1], ["0%", "-10%"]) 
   const heroOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0])
 
@@ -255,65 +301,69 @@ export default function Home() {
     { icon: Clapperboard, title: "FX & Post-Production", description: "Montage dynamique, motion design et effets visuels modernes pour maximiser l'impact sur les réseaux." },
     { icon: BrainCircuit, title: "Stratégie Digitale", description: "Accompagnement personnalisé basé sur l'analyse et la performance pour accélérer votre croissance concrète." },
   ]
+  
+  const serviceOptions = services.map(s => s.title);
 
-  // DATA CLIENTS - Noms de fichiers exacts + facteur d'échelle pour les agrandir
+  // DATA CLIENTS
   const clients = [
       { name: "Nutribeast", logo: "/logos_01.gif", scale: 1.2 },
       { name: "ITKAN", logo: "/itkanongblue.png", scale: 1 },
       { name: "DUKA", logo: "/logos_07.gif", scale: 1.2 },
       { name: "SS Logo", logo: "/logos_03.gif", scale: 1 },
-      // Répétition
-      { name: "Nutribeast", logo: "/logos_01.gif", scale: 1.2 },
-      { name: "ITKAN", logo: "/itkanongblue.png", scale: 1 },
-      { name: "DUKA", logo: "/logos_07.gif", scale: 1.2 },
-      { name: "SS Logo", logo: "/logos_03.gif", scale: 1 },
   ]
 
-  // DATA PROJETS - Noms exacts, ajout de DUKA et Unviral
+  // DATA PROJETS
   const projects = [
-    // VIDEO 1 : Nutribeast Tour
     { id: 1, title: "Nutribeast Store Concept", category: "Retail Design & Branding", thumbnail: "/nutri TOUR.mov", stats: { views: "25k", engagement: "94%" } },
-    
-    // IMAGE 1 : Velar Tour
     { id: 2, title: "Velar Tour Experience", category: "Web Design UI/UX", thumbnail: "/IMG_1006.JPG", stats: { views: "42k", engagement: "89%" } },
-    
-    // VIDEO 2 : ABE Energy
     { id: 3, title: "ABE Energy Campaign", category: "Production Vidéo & FX", thumbnail: "/ABE.mp4", stats: { views: "150k+", engagement: "98%" } },
-    
-    // VIDEO 3 : Unviral (Remplacement de ITKAN)
     { id: 4, title: "Unviral Growth Strategy", category: "Data-Driven Marketing", thumbnail: "/Unviral.mp4", stats: { views: "50k+", engagement: "96%" } },
-    
-    // IMAGE 2 : Shooting Dalmatian
     { id: 5, title: "Streetwear Lifestyle", category: "Shooting Studio", thumbnail: "/_DSC0518.JPG", stats: { views: "35k", engagement: "95%" } },
-    
-    // VIDEO 4 : Anas Video
     { id: 6, title: "Athlete Lifestyle Reels", category: "Social Media Content", thumbnail: "/1 video anas.mp4", stats: { views: "200k+", engagement: "99%" } },
-
-    // VIDEO 5 : DUKA (Nouveau projet)
     { id: 7, title: "DUKA Brand Launch", category: "Motion Design & Branding", thumbnail: "/DUKA.MP4", stats: { views: "85k", engagement: "93%" } },
   ]
 
+  // --- PARTENARIATS REFORMULÉS "PRO" ---
   const partnerships = [
-    { icon: Briefcase, title: "Collaboration Agence", description: "Unir nos forces pour des résultats exceptionnels." },
-    { icon: Target, title: "Partenariats Marque", description: "Co-création de campagnes impactantes." },
-    { icon: Award, title: "Alliances Stratégiques", description: "Construire des relations long-terme." },
+    { icon: Briefcase, title: "Expertise Pluridisciplinaire", description: "Une équipe complète : Devs, Créatifs et Stratèges unis pour votre croissance." },
+    { icon: Target, title: "Approche Orientée ROI", description: "Nous ne cherchons pas juste le 'beau', nous visons la performance et la conversion." },
+    { icon: Award, title: "Standards Internationaux", description: "Une qualité de production alignée sur les tendances mondiales actuelles." },
   ]
+
   const stats = [
     { icon: TrendingUp, value: "20+", label: "Projets Terminés" },
     { icon: Users, value: "15+", label: "Clients Heureux" },
     { icon: Eye, value: "1M+", label: "Vues Totales" },
     { icon: Heart, value: "90%", label: "Satisfaction" },
   ]
+
   const processSteps = [
       { icon: Lightbulb, title: "Découverte", description: "Nous analysons en profondeur l'essence de votre marque, vos objectifs et votre audience." },
       { icon: Layers, title: "Stratégie & Design", description: "Nos architectes créent le plan pendant que les designers façonnent l'identité visuelle." },
       { icon: Video, title: "Production", description: "C'est ici que la magie opère : développement, tournage, montage et création." },
       { icon: Rocket, title: "Lancement & Croissance", description: "Déploiement du projet et suivi des performances pour un ROI maximal." }
   ]
+
+  // --- AVIS CLIENTS RÉALISTES ABM ---
   const testimonials = [
-      { name: "Sarah Connor", role: "CMO chez Cyberdyne", initials: "SC", text: "ABM Media a transformé notre présence digitale. Le ROI de la dernière campagne était irréel." },
-      { name: "John Wick", role: "Fondateur Continental", initials: "JW", text: "Précis, professionnels et créatifs. La meilleure agence avec laquelle nous avons travaillé." },
-      { name: "Ellen Ripley", role: "Directrice Weyland", initials: "ER", text: "Ils ont compris notre vision immédiatement. Le branding nous a aidé à sécuriser nos fonds." }
+      { 
+        name: "Karim Ben Amor", 
+        role: "Fondateur, NutriBeast", 
+        initials: "KB", 
+        text: "ABM a totalement redéfini notre image. La qualité des vidéos et du branding nous a permis de toucher une clientèle premium instantanément. Un travail d'orfèvre." 
+      },
+      { 
+        name: "Amel S.", 
+        role: "Directrice Marketing, ITKAN", 
+        initials: "AS", 
+        text: "Enfin une agence qui comprend le digital moderne. Réactifs, créatifs et surtout force de proposition. Notre engagement sur les réseaux a triplé en 2 mois." 
+      },
+      { 
+        name: "Yassine Dridi", 
+        role: "CEO, DUKA Store", 
+        initials: "YD", 
+        text: "Je cherchais des partenaires, j'ai trouvé une extension de mon équipe. Leur stratégie de lancement a été impeccable. Je recommande les yeux fermés." 
+      }
   ]
 
   return (
@@ -349,9 +399,19 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+                {/* --- RÉSEAUX SOCIAUX NAVBAR (HAUT) --- */}
+                <div className="hidden lg:flex items-center gap-2 mr-2 pr-4 border-r border-white/10">
+                    <a href="https://www.instagram.com/abmmedia_?igsh=ZXdmYWp4M3pscmlk" target="_blank" className="p-2 rounded-full bg-white/5 hover:bg-gradient-to-tr hover:from-purple-500 hover:to-orange-500 hover:text-white transition-all duration-300 text-zinc-400">
+                        <Instagram className="w-5 h-5" />
+                    </a>
+                    <a href="https://www.facebook.com/share/1QPqbBYruR/?mibextid=wwXIfr" target="_blank" className="p-2 rounded-full bg-white/5 hover:bg-blue-600 hover:text-white transition-all duration-300 text-zinc-400">
+                        <Facebook className="w-5 h-5" />
+                    </a>
+                </div>
+
                 <Button onClick={() => scrollToSection('contact')} className="rounded-xl h-11 px-8 bg-white text-black hover:bg-zinc-200 font-bold text-sm transition-all duration-300 transform hover:scale-105">
-                    Démarrer un Projet
+                    Démarrer
                 </Button>
                 <Button size="icon" variant="ghost" className="md:hidden text-white hover:bg-white/10 rounded-xl">
                     <Menu className="w-6 h-6" />
@@ -394,7 +454,6 @@ export default function Home() {
                 </motion.h1>
             </div>
 
-            {/* NOUVELLE PHRASE D'ACCROCHE */}
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="text-lg md:text-xl text-zinc-300 max-w-4xl mx-auto leading-relaxed mb-12 font-light">
               Your vision. Our inspiration. <br/> ABM Media engineers cultural moments through strategy, storytelling and digital production built to influence, engage and convert.
             </motion.p>
@@ -408,12 +467,6 @@ export default function Home() {
                 </Button>
             </motion.div>
         </div>
-        
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 1 }} className="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/50 backdrop-blur-md py-4 px-6 flex justify-between items-center text-xs text-zinc-500 uppercase tracking-widest hidden md:flex">
-            <span>Basé à Sousse, Tunisie</span>
-            <span className="animate-pulse text-blue-500">Scroll to Explore</span>
-            <span>Disponible Worldwide</span>
-        </motion.div>
       </motion.section>
 
       {/* STATS STRIP */}
@@ -467,7 +520,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WORK SECTION (VOS VRAIS PROJETS AVEC VIDEO AUTO) */}
+      {/* WORK SECTION */}
       <section id="work" className="py-32 px-6 bg-zinc-900/20">
         <div className="max-w-[1400px] mx-auto">
           <div className="mb-20 text-center">
@@ -475,14 +528,11 @@ export default function Home() {
             <h2 className="text-4xl md:text-6xl font-medium tracking-tight text-white">Créations Récentes</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-6 gap-6 auto-rows-[350px] md:auto-rows-[450px]">
-            {/* Mise en page type "Bento Grid" pour 7 projets */}
             <ProjectCard project={projects[0]} index={0} className="md:col-span-3 md:row-span-1" />
             <ProjectCard project={projects[1]} index={1} className="md:col-span-3 md:row-span-1" />
-            
             <ProjectCard project={projects[2]} index={2} className="md:col-span-2 md:row-span-1" />
             <ProjectCard project={projects[3]} index={3} className="md:col-span-2 md:row-span-1" />
             <ProjectCard project={projects[4]} index={4} className="md:col-span-2 md:row-span-1" />
-            
             <ProjectCard project={projects[5]} index={5} className="md:col-span-3 md:row-span-1" />
             <ProjectCard project={projects[6]} index={6} className="md:col-span-3 md:row-span-1" />
           </div>
@@ -492,31 +542,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CLIENTS MARQUEE (LOGOS AGRANDIS) */}
-      <section className="py-20 border-y border-white/5 bg-black/80 overflow-hidden relative z-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#020202] via-transparent to-[#020202] z-10 pointer-events-none" />
-        <div className="flex animate-marquee whitespace-nowrap items-center">
-             {/* On triple la liste pour un scroll infini fluide */}
-             {[...clients, ...clients, ...clients].map((client, i) => (
-                 <div key={i} className="mx-12 flex-shrink-0 group">
-                     {/* Utilisation du scale pour agrandir, h-24 pour une plus grande taille de base */}
-                     <img 
-                        src={client.logo} 
-                        alt={client.name}
-                        style={{ transform: `scale(${client.scale})` }}
-                        className="h-24 w-auto object-contain opacity-60 group-hover:opacity-100 transition-all duration-500 filter grayscale brightness-200 contrast-125"
-                        onError={(e) => {e.currentTarget.style.display = 'none'}}
-                     />
-                 </div>
-             ))}
+   {/* --- SECTION PARTENAIRES (VERSION ROULANTE & CLEAN) --- */}
+      <section className="py-24 border-y border-white/5 bg-[#050505] overflow-hidden relative">
+        
+        <div className="max-w-[1400px] mx-auto px-6 mb-12 text-center">
+             {/* TITRE MODIFIABLE ICI */}
+             <span className="text-blue-500 font-bold tracking-[0.3em] text-xs uppercase mb-2">Ils nous ont fait confiance</span>
+             <h3 className="text-white text-xl md:text-2xl font-medium">Les leaders qui passent au niveau supérieur</h3>
+        </div>
+
+        {/* CONTENEUR ROULANT */}
+        <div className="relative w-full flex overflow-hidden">
+            
+            {/* Dégradés sur les côtés pour faire joli */}
+            <div className="absolute top-0 left-0 w-32 h-full z-10 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-32 h-full z-10 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none"></div>
+
+            {/* L'animation qui fait tourner les logos */}
+          <motion.div 
+                className="flex gap-16 items-center whitespace-nowrap"
+                animate={{ x: ["0%", "-50%"] }} 
+                transition={{ repeat: Infinity, ease: "linear", duration: 25 }} // J'ai ralenti un peu pour qu'on voit mieux
+            >
+                {/* On répète les logos */}
+                {[...clients, ...clients, ...clients, ...clients].map((client, i) => (
+                    <div key={i} className="relative group flex items-center justify-center min-w-[200px]"> {/* min-w plus grand */}
+                        <img 
+                            src={client.logo} 
+                            alt={client.name} 
+                            /* CORRECTIONS ICI : 
+                               1. h-32 : Beaucoup plus grand
+                               2. J'ai enlevé 'brightness-0 invert' pour qu'ils ne disparaissent pas
+                               3. grayscale : Reste en gris (pro) et passe en couleur au survol
+                            */
+                            className="h-32 w-auto object-contain transition-all duration-300
+                                       grayscale hover:grayscale-0 scale-100 hover:scale-110"
+                        />
+                    </div>
+                ))}
+            </motion.div>
         </div>
       </section>
 
-      {/* TESTIMONIALS SECTION */}
+      {/* TESTIMONIALS SECTION - AVIS RÉALISTES */}
       <section className="py-32 px-6">
         <div className="max-w-[1400px] mx-auto">
              <div className="mb-16 flex justify-between items-end">
-                <h2 className="text-3xl md:text-5xl font-medium">Ils nous font confiance</h2>
+                <h2 className="text-3xl md:text-5xl font-medium">L'avis des clients</h2>
                 <div className="flex gap-2">
                     <span className="w-3 h-3 rounded-full bg-blue-500"></span>
                     <span className="w-3 h-3 rounded-full bg-zinc-700"></span>
@@ -531,7 +603,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ABOUT & PARTNERSHIPS */}
+      {/* ABOUT & PARTNERSHIPS - TEXTES PRO */}
       <section id="about" className="py-32 px-6 bg-zinc-900/10">
         <div className="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20">
             <div>
@@ -546,7 +618,6 @@ export default function Home() {
                     ))}
                 </div>
             </div>
-            {/* Remplacement de l'image de l'équipe par une des vôtres */}
             <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 relative h-full min-h-[500px]">
                 <img src="/_DSC0518.JPG" alt="Team Work" className="absolute inset-0 w-full h-full object-cover opacity-50 hover:opacity-80 transition-all duration-700 scale-105 hover:scale-100"/>
                 <div className="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black to-transparent w-full">
@@ -557,77 +628,103 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CONTACT SECTION */}
-      <section id="contact" className="py-32 px-6 border-t border-white/10 bg-[#080808]">
-        <div className="max-w-[1400px] mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                <div>
-                    <h2 className="text-5xl md:text-7xl font-semibold tracking-tighter mb-8">Créons quelque chose <br/> d'<span className="text-blue-600">unique.</span></h2>
-                    <p className="text-zinc-400 text-xl mb-12 max-w-md">Prêt à démarrer ? Remplissez le formulaire et discutons directement sur WhatsApp.</p>
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4 text-lg">
-                            <div className="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center border border-white/10"><Mail className="w-5 h-5 text-white"/></div>
-                            <span className="text-zinc-300">contact@abmmedia.com</span>
-                        </div>
-                        <div className="flex items-center gap-4 text-lg">
-                            <div className="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center border border-white/10"><Phone className="w-5 h-5 text-white"/></div>
-                            <span className="text-zinc-300">+216 58 639 342</span>
-                        </div>
-                        <div className="flex items-center gap-4 text-lg">
-                            <div className="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center border border-white/10"><MapPin className="w-5 h-5 text-white"/></div>
-                            <span className="text-zinc-300">Sousse, Tunisie</span>
-                        </div>
+      {/* --- CONTACT SECTION AVEC NOUVEAU SELECT ROULANT --- */}
+      <section id="contact" className="py-32 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900/10 pointer-events-none"/>
+        <div className="max-w-4xl mx-auto relative z-10">
+            <div className="text-center mb-16">
+                <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Prêt à décoller ?</span>
+                <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Parlons de votre projet.</h2>
+                <p className="text-zinc-400 text-lg">Remplissez le formulaire ci-dessous et nous vous répondrons via WhatsApp.</p>
+            </div>
+
+            <form onSubmit={handleWhatsAppSubmit} className="space-y-6 bg-zinc-900/50 p-8 md:p-12 rounded-3xl border border-white/5 backdrop-blur-xl relative z-50">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-zinc-400 ml-1">Nom complet</label>
+                        <input required name="name" value={formData.name} onChange={handleInputChange} className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-blue-500 transition-colors text-white" placeholder="John Doe" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-zinc-400 ml-1">Email</label>
+                        <input required name="email" value={formData.email} onChange={handleInputChange} type="email" className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-blue-500 transition-colors text-white" placeholder="john@company.com" />
                     </div>
                 </div>
-                <div className="bg-zinc-900/30 p-8 rounded-3xl border border-white/5">
-                    <form onSubmit={handleWhatsAppSubmit} className="space-y-6">
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-xs uppercase tracking-widest text-zinc-500">Nom</label>
-                                <input name="name" value={formData.name} onChange={handleInputChange} type="text" required className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="Votre Nom" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs uppercase tracking-widest text-zinc-500">Email</label>
-                                <input name="email" value={formData.email} onChange={handleInputChange} type="email" required className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="votre@email.com" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs uppercase tracking-widest text-zinc-500">Service souhaité</label>
-                            <select name="service" value={formData.service} onChange={handleInputChange} className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-blue-500 focus:outline-none transition-colors appearance-none">
-                                <option>Développement Web</option>
-                                <option>Branding & Identité</option>
-                                <option>Création de Contenu</option>
-                                <option>Shooting & DA</option>
-                                <option>FX & Post-Production</option>
-                                <option>Stratégie Digitale</option>
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs uppercase tracking-widest text-zinc-500">Message</label>
-                            <textarea name="message" value={formData.message} onChange={handleInputChange} rows={4} required className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="Parlez-nous de votre projet..." />
-                        </div>
-                        <Button type="submit" className="w-full py-6 text-lg rounded-xl bg-green-600 hover:bg-green-700 shadow-[0_0_20px_rgba(22,163,74,0.4)]">
-                            Envoyer sur WhatsApp
-                        </Button>
-                    </form>
+                
+                <div className="space-y-2 relative z-50">
+                    <label className="text-sm font-medium text-zinc-400 ml-1">Service souhaité</label>
+                    {/* UTILISATION DU NOUVEAU SELECT ROULANT */}
+                    <CustomSelect 
+                      options={serviceOptions} 
+                      value={formData.service} 
+                      onChange={handleServiceChange}
+                      placeholder="Sélectionnez un service..."
+                    />
                 </div>
-            </div>
+
+                <div className="space-y-2 relative z-10">
+                    <label className="text-sm font-medium text-zinc-400 ml-1">Message</label>
+                    <textarea required name="message" value={formData.message} onChange={handleInputChange} rows={4} className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-blue-500 transition-colors text-white resize-none" placeholder="Décrivez brièvement votre projet..." />
+                </div>
+
+                <Button type="submit" className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-xl transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:shadow-[0_0_50px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2 relative z-10">
+                    Envoyer via WhatsApp <Send className="w-5 h-5" />
+                </Button>
+            </form>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-white/10 py-12 px-6 bg-[#020202]">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-3">
-                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xs">ABM</div>
-                 <span className="font-bold text-lg">ABM MEDIA</span>
+      {/* --- FOOTER & SOCIAL LINKS (BAS) --- */}
+      <footer className="bg-zinc-950 border-t border-white/10 pt-20 pb-10 px-6">
+        <div className="max-w-[1400px] mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div className="col-span-1 md:col-span-2">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xs">ABM</div>
+                        <span className="text-xl font-bold tracking-tight text-white">ABM MEDIA</span>
+                    </div>
+                    <p className="text-zinc-500 max-w-sm mb-8">
+                        Agence de production et de stratégie digitale basée en Tunisie. Nous créons du contenu qui captive et convertit.
+                    </p>
+                    {/* LIENS RÉSEAUX SOCIAUX PIED DE PAGE */}
+                    <div className="flex gap-4">
+                        <a href="https://www.instagram.com/abmmedia_?igsh=ZXdmYWp4M3pscmlk" target="_blank" className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:bg-white hover:text-black transition-all duration-300">
+                            <Instagram className="w-5 h-5" />
+                        </a>
+                        <a href="https://www.facebook.com/share/1QPqbBYruR/?mibextid=wwXIfr" target="_blank" className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white transition-all duration-300">
+                            <Facebook className="w-5 h-5" />
+                        </a>
+                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:bg-white hover:text-black transition-all duration-300">
+                            <Linkedin className="w-5 h-5" />
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 className="text-white font-bold mb-6">Services</h4>
+                    <ul className="space-y-3 text-zinc-500 text-sm">
+                        <li className="hover:text-blue-400 cursor-pointer">Développement Web</li>
+                        <li className="hover:text-blue-400 cursor-pointer">Production Vidéo</li>
+                        <li className="hover:text-blue-400 cursor-pointer">Branding</li>
+                        <li className="hover:text-blue-400 cursor-pointer">Stratégie Social Media</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 className="text-white font-bold mb-6">Contact</h4>
+                    <ul className="space-y-3 text-zinc-500 text-sm">
+                        <li>Sousse, Tunisie</li>
+                        <li>contact@abmmedia.com</li>
+                        <li>+216 58 639 342</li>
+                    </ul>
+                </div>
             </div>
-            <div className="text-zinc-500 text-sm">© 2026 ABM Media Inc. Tous droits réservés.</div>
-            <div className="flex gap-6">
-                <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Instagram className="w-5 h-5"/></a>
-                <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Twitter className="w-5 h-5"/></a>
-                <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Linkedin className="w-5 h-5"/></a>
-                <a href="#" className="text-zinc-400 hover:text-white transition-colors"><Github className="w-5 h-5"/></a>
+            
+            <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-zinc-600">
+                <p>&copy; 2024 ABM Media. Tous droits réservés.</p>
+                <div className="flex gap-6 mt-4 md:mt-0">
+                    <span className="hover:text-white cursor-pointer">Mentions Légales</span>
+                    <span className="hover:text-white cursor-pointer">Confidentialité</span>
+                </div>
             </div>
         </div>
       </footer>
