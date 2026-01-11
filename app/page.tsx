@@ -310,6 +310,7 @@ export default function Home() {
       { name: "ITKAN", logo: "/itkanongblue.png", scale: 1 },
       { name: "DUKA", logo: "/logos_07.gif", scale: 1.2 },
       { name: "SS Logo", logo: "/logos_03.gif", scale: 1 },
+      { name: "Zaitouna", logo: "/logo.png", scale: 1 },
   ]
 
   // DATA PROJETS
@@ -319,7 +320,7 @@ export default function Home() {
     { id: 3, title: "ABE Energy Campaign", category: "Production Vidéo & FX", thumbnail: "/ABE.mp4", stats: { views: "150k+", engagement: "98%" } },
     { id: 4, title: "Unviral Growth Strategy", category: "Data-Driven Marketing", thumbnail: "/Unviral.mp4", stats: { views: "50k+", engagement: "96%" } },
     { id: 5, title: "Streetwear Lifestyle", category: "Shooting Studio", thumbnail: "/_DSC0518.JPG", stats: { views: "35k", engagement: "95%" } },
-    { id: 6, title: "Athlete Lifestyle Reels", category: "Social Media Content", thumbnail: "/1 video anas.mp4", stats: { views: "200k+", engagement: "99%" } },
+    { id: 6, title: "Education Lifestyle Reels", category: "Social Media Content", thumbnail: "/1 video anas.mp4", stats: { views: "200k+", engagement: "99%" } },
     { id: 7, title: "DUKA Brand Launch", category: "Motion Design & Branding", thumbnail: "/DUKA.MP4", stats: { views: "85k", engagement: "93%" } },
   ]
 
@@ -345,24 +346,25 @@ export default function Home() {
   ]
 
   // --- AVIS CLIENTS RÉALISTES ABM ---
+ // --- AVIS CLIENTS RÉALISTES ABM (MODIFIÉS) ---
   const testimonials = [
-      { 
-        name: "Karim Ben Amor", 
-        role: "Fondateur, NutriBeast", 
-        initials: "KB", 
-        text: "ABM a totalement redéfini notre image. La qualité des vidéos et du branding nous a permis de toucher une clientèle premium instantanément. Un travail d'orfèvre." 
+      {
+        name: "Yassine Bradai",
+        role: "Fondateur, Duka.tn",
+        initials: "YB",
+        text: "ABM Media a parfaitement compris la vision de Duka.tn : construire une marque premium, crédible et orientée qualité. Chaque détail a été pensé pour refléter ce positionnement et élever notre image digitale."
       },
-      { 
-        name: "Amel S.", 
-        role: "Directrice Marketing, ITKAN", 
-        initials: "AS", 
-        text: "Enfin une agence qui comprend le digital moderne. Réactifs, créatifs et surtout force de proposition. Notre engagement sur les réseaux a triplé en 2 mois." 
+      {
+        name: "Houssem BEYA C.",
+        role: "CEO & Founder, ITKAN Consulting Service",
+        initials: "HB",
+        text: "Collaborating with ABM Media on itkanconsulting.com was a great experience. They understood our vision from day one and translated it into a clean, credible, and high-value digital presence aligned with our consulting standards."
       },
-      { 
-        name: "Yassine Dridi", 
-        role: "CEO, DUKA Store", 
-        initials: "YD", 
-        text: "Je cherchais des partenaires, j'ai trouvé une extension de mon équipe. Leur stratégie de lancement a été impeccable. Je recommande les yeux fermés." 
+      {
+        name: "Coach Mohamed Haddad",
+        role: "Founder, NutriBeast",
+        initials: "MH",
+        text: "ABM Media really understood NutriBeast’s vibe. The designs, content, and social media strategy helped us look more consistent, stronger, and more professional online."
       }
   ]
 
@@ -428,7 +430,7 @@ export default function Home() {
         className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden pt-20"
       >
         <motion.div style={{ y: heroY }} className="absolute inset-0 z-0">
-            <img src="/_DSC0518.JPG" alt="Background" className="w-full h-full object-cover opacity-20 scale-110 grayscale" />
+            <img src="/teamwork.JPG" alt="Background" className="w-full h-full object-cover opacity-20 scale-110 grayscale" />
             <div className="absolute inset-0 bg-[#020202]/70 mix-blend-multiply" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#020202] via-transparent to-[#020202]/80" />
             <motion.div style={{ y: bigTextY }} className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
@@ -619,7 +621,7 @@ export default function Home() {
                 </div>
             </div>
             <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 relative h-full min-h-[500px]">
-                <img src="/_DSC0518.JPG" alt="Team Work" className="absolute inset-0 w-full h-full object-cover opacity-50 hover:opacity-80 transition-all duration-700 scale-105 hover:scale-100"/>
+                <img src="/about.jpg" alt="Team Work" className="absolute inset-0 w-full h-full object-cover opacity-50 hover:opacity-80 transition-all duration-700 scale-105 hover:scale-100"/>
                 <div className="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black to-transparent w-full">
                     <div className="text-white text-xl font-bold">Notre QG Créatif</div>
                     <div className="text-zinc-400">Sousse, Tunisie</div>
@@ -720,7 +722,7 @@ export default function Home() {
             </div>
             
             <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-zinc-600">
-                <p>&copy; 2024 ABM Media. Tous droits réservés.</p>
+                <p>&copy; 2026 ABM Media. Tous droits réservés.</p>
                 <div className="flex gap-6 mt-4 md:mt-0">
                     <span className="hover:text-white cursor-pointer">Mentions Légales</span>
                     <span className="hover:text-white cursor-pointer">Confidentialité</span>
