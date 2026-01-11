@@ -3,20 +3,19 @@
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import {
-  Play, Sparkles, Globe, Palette, Video, FileText, ArrowRight,
-  Mail, Phone, MapPin, Briefcase, Users, Target, Award, Zap,
+  Play, Globe, Palette, Video, ArrowRight,
+  Mail, Phone, MapPin, Briefcase, Users, Target, Award,
   TrendingUp, Eye, Heart, Lightbulb, Layers, Rocket, Quote, Menu,
-  Facebook, Twitter, Instagram, Linkedin, Github, Camera, Clapperboard, 
-  BrainCircuit, PlayCircle, Send, ChevronDown, Check
+  Facebook, Instagram, Linkedin, Camera, Clapperboard, 
+  BrainCircuit, Send, ChevronDown, Check
 } from "lucide-react"
 import { useRef, useState, useEffect } from "react"
 
-// --- NOUVEAU COMPOSANT SELECT "ROULANT" ---
+// --- COMPOSANT SELECT "ROULANT" ---
 const CustomSelect = ({ options, value, onChange, placeholder }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Fermer si on clique ailleurs
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -72,7 +71,7 @@ const CustomSelect = ({ options, value, onChange, placeholder }: any) => {
   );
 };
 
-// --- COMPOSANTS INTERNES EXISTANTS ---
+// --- COMPOSANTS INTERNES ---
 
 const ServiceCard = ({ service, index, isHovered, onHover, onLeave }: any) => (
   <motion.div
@@ -108,7 +107,6 @@ const ProjectCard = ({ project, index, onHover, onLeave, className }: any) => {
       const lowerName = filename.toLowerCase();
       return lowerName.endsWith('.mp4') || lowerName.endsWith('.mov');
   };
-
   const isVideo = isVideoFile(project.thumbnail);
 
   return (
@@ -123,38 +121,21 @@ const ProjectCard = ({ project, index, onHover, onLeave, className }: any) => {
     >
         <div className="absolute inset-0 overflow-hidden">
             {isVideo ? (
-                <video 
-                    src={project.thumbnail} 
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity duration-700"
-                    muted 
-                    loop 
-                    autoPlay 
-                    playsInline 
-                />
+                <video src={project.thumbnail} className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity duration-700" muted loop autoPlay playsInline />
             ) : (
-                <img 
-                    src={project.thumbnail} 
-                    alt={project.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-60"
-                />
+                <img src={project.thumbnail} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-60" />
             )}
-            
             <div className="absolute inset-0 bg-gradient-to-t from-black via-zinc-950/40 to-transparent" />
-            
             {isVideo && (
                 <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md p-2 rounded-full border border-white/10 z-20">
                     <Video className="w-4 h-4 text-white" />
                 </div>
             )}
         </div>
-        
         <div className="absolute inset-0 p-8 flex flex-col justify-end z-20">
             <div className="transform transition-transform duration-500 group-hover:-translate-y-2">
-                <span className="text-blue-500 text-xs font-bold tracking-widest uppercase mb-2 block">
-                {project.category}
-                </span>
+                <span className="text-blue-500 text-xs font-bold tracking-widest uppercase mb-2 block">{project.category}</span>
                 <h3 className="text-2xl md:text-3xl font-medium text-white mb-2 tracking-tight leading-tight">{project.title}</h3>
-                
                 <div className="h-0 overflow-hidden group-hover:h-auto transition-all duration-300">
                     <div className="flex items-center gap-4 md:gap-6 pt-4 text-sm text-zinc-300 border-t border-white/10 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                     <span>{project.stats.views} Vues</span>
@@ -176,7 +157,7 @@ const PartnershipCard = ({ partnership, index }: any) => (
     transition={{ delay: index * 0.2 }}
     className="bg-zinc-900/50 border border-white/5 p-8 rounded-xl hover:border-blue-500/30 transition-colors group"
   >
-    <partnership.icon className="w-8 h-8 text-blue-500 mb-6 group-hover:scale-110 transition-transform duration-300" />
+    <partnership.icon className="w-12 h-12 text-blue-500 mb-6 group-hover:scale-110 transition-transform duration-300" />
     <h3 className="text-xl font-medium text-white mb-3">{partnership.title}</h3>
     <p className="text-sm text-zinc-400 leading-relaxed">{partnership.description}</p>
   </motion.div>
@@ -225,28 +206,20 @@ const TestimonialCard = ({ testimonial, index }: any) => (
     </motion.div>
 )
 
-// --- COMPOSANT PRINCIPAL ---
+// --- MAIN COMPONENT ---
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
+  const [formData, setFormData] = useState({ name: "", email: "", service: "Développement Web", message: "" })
+  const [hoveredService, setHoveredService] = useState<number | null>(null)
 
-  // Gestion du formulaire WhatsApp
-  const [formData, setFormData] = useState({
-      name: "",
-      email: "",
-      service: "Développement Web",
-      message: ""
-  })
-
-  // Gestion changement input texte
   const handleInputChange = (e: any) => {
       const { name, value } = e.target
       setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  // Gestion changement Dropdown Custom
   const handleServiceChange = (value: string) => {
     setFormData(prev => ({ ...prev, service: value }))
   }
@@ -260,7 +233,6 @@ export default function Home() {
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-
   function handleMouseMove({ currentTarget, clientX, clientY }: any) {
     let { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
@@ -269,9 +241,7 @@ export default function Home() {
 
   const scrollToSection = (id: string) => {
       const element = document.getElementById(id);
-      if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-      }
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
   }
 
   useEffect(() => {
@@ -280,19 +250,12 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  })
-
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] })
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
   const heroY = useTransform(smoothProgress, [0, 1], ["0%", "40%"]) 
   const bigTextY = useTransform(smoothProgress, [0, 1], ["0%", "-10%"]) 
   const heroOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0])
 
-  const [hoveredService, setHoveredService] = useState<number | null>(null)
-
-  // DATA SERVICES
   const services = [
     { icon: Globe, title: "Développement Web", description: "Plateformes digitales sur mesure, pensées pour convertir. Sites optimisés, performants et alignés avec votre vision." },
     { icon: Palette, title: "Branding & Identité", description: "Construction de marques fortes et mémorables. Identité visuelle et storytelling pour renforcer votre crédibilité." },
@@ -301,10 +264,8 @@ export default function Home() {
     { icon: Clapperboard, title: "FX & Post-Production", description: "Montage dynamique, motion design et effets visuels modernes pour maximiser l'impact sur les réseaux." },
     { icon: BrainCircuit, title: "Stratégie Digitale", description: "Accompagnement personnalisé basé sur l'analyse et la performance pour accélérer votre croissance concrète." },
   ]
-  
   const serviceOptions = services.map(s => s.title);
 
-  // DATA CLIENTS
   const clients = [
       { name: "Nutribeast", logo: "/logos_01.gif", scale: 1.2 },
       { name: "ITKAN", logo: "/itkanongblue.png", scale: 1 },
@@ -313,7 +274,6 @@ export default function Home() {
       { name: "Zaitouna", logo: "/logo.png", scale: 1 },
   ]
 
-  // DATA PROJETS
   const projects = [
     { id: 1, title: "Nutribeast Store Concept", category: "Retail Design & Branding", thumbnail: "/nutri TOUR.mov", stats: { views: "25k", engagement: "94%" } },
     { id: 2, title: "Velar Tour Experience", category: "Web Design UI/UX", thumbnail: "/IMG_1006.JPG", stats: { views: "42k", engagement: "89%" } },
@@ -324,7 +284,6 @@ export default function Home() {
     { id: 7, title: "DUKA Brand Launch", category: "Motion Design & Branding", thumbnail: "/DUKA.MP4", stats: { views: "85k", engagement: "93%" } },
   ]
 
-  // --- PARTENARIATS REFORMULÉS "PRO" ---
   const partnerships = [
     { icon: Briefcase, title: "Expertise Pluridisciplinaire", description: "Une équipe complète : Devs, Créatifs et Stratèges unis pour votre croissance." },
     { icon: Target, title: "Approche Orientée ROI", description: "Nous ne cherchons pas juste le 'beau', nous visons la performance et la conversion." },
@@ -345,25 +304,17 @@ export default function Home() {
       { icon: Rocket, title: "Lancement & Croissance", description: "Déploiement du projet et suivi des performances pour un ROI maximal." }
   ]
 
-  // --- AVIS CLIENTS RÉALISTES ABM ---
- // --- AVIS CLIENTS RÉALISTES ABM (MODIFIÉS) ---
   const testimonials = [
       {
-        name: "Yassine Bradai",
-        role: "Fondateur, Duka.tn",
-        initials: "YB",
+        name: "Yassine Bradai", role: "Fondateur, Duka.tn", initials: "YB",
         text: "ABM Media a parfaitement compris la vision de Duka.tn : construire une marque premium, crédible et orientée qualité. Chaque détail a été pensé pour refléter ce positionnement et élever notre image digitale."
       },
       {
-        name: "Houssem BEYA C.",
-        role: "CEO & Founder, ITKAN Consulting Service",
-        initials: "HB",
+        name: "Houssem BEYA C.", role: "CEO & Founder, ITKAN Consulting Service", initials: "HB",
         text: "Collaborating with ABM Media on itkanconsulting.com was a great experience. They understood our vision from day one and translated it into a clean, credible, and high-value digital presence aligned with our consulting standards."
       },
       {
-        name: "Coach Mohamed Haddad",
-        role: "Founder, NutriBeast",
-        initials: "MH",
+        name: "Coach Mohamed Haddad", role: "Founder, NutriBeast", initials: "MH",
         text: "ABM Media really understood NutriBeast’s vibe. The designs, content, and social media strategy helped us look more consistent, stronger, and more professional online."
       }
   ]
@@ -402,7 +353,6 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-3">
-                {/* --- RÉSEAUX SOCIAUX NAVBAR (HAUT) --- */}
                 <div className="hidden lg:flex items-center gap-2 mr-2 pr-4 border-r border-white/10">
                     <a href="https://www.instagram.com/abmmedia_?igsh=ZXdmYWp4M3pscmlk" target="_blank" className="p-2 rounded-full bg-white/5 hover:bg-gradient-to-tr hover:from-purple-500 hover:to-orange-500 hover:text-white transition-all duration-300 text-zinc-400">
                         <Instagram className="w-5 h-5" />
@@ -411,7 +361,6 @@ export default function Home() {
                         <Facebook className="w-5 h-5" />
                     </a>
                 </div>
-
                 <Button onClick={() => scrollToSection('contact')} className="rounded-xl h-11 px-8 bg-white text-black hover:bg-zinc-200 font-bold text-sm transition-all duration-300 transform hover:scale-105">
                     Démarrer
                 </Button>
@@ -437,7 +386,6 @@ export default function Home() {
                 <span className="text-[25vw] md:text-[35vw] font-black text-white/5 leading-none tracking-tighter mix-blend-overlay whitespace-nowrap blur-sm">ABM</span>
             </motion.div>
         </motion.div>
-
         <motion.div className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100 z-10" style={{ background: useMotionTemplate`radial-gradient(650px circle at ${mouseX}px ${mouseY}px, rgba(37, 99, 235, 0.15), transparent 80%)` }} />
 
         <div className="relative z-20 text-center max-w-7xl mx-auto flex flex-col items-center">
@@ -445,7 +393,6 @@ export default function Home() {
                 <span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span></span>
                 <span className="text-xs font-bold uppercase tracking-widest text-blue-200">Agence Digitale Premium</span>
             </motion.div>
-
             <div className="mb-8 relative">
                 <motion.h1 initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-6xl md:text-9xl font-bold tracking-tighter text-white leading-[0.9] text-center">
                     We Build <br />
@@ -455,11 +402,9 @@ export default function Home() {
                     </span>
                 </motion.h1>
             </div>
-
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="text-lg md:text-xl text-zinc-300 max-w-4xl mx-auto leading-relaxed mb-12 font-light">
               Your vision. Our inspiration. <br/> ABM Media engineers cultural moments through strategy, storytelling and digital production built to influence, engage and convert.
             </motion.p>
-
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.8 }} className="flex flex-col sm:flex-row gap-6 justify-center w-full">
                 <Button onClick={() => scrollToSection('contact')} className="h-16 px-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg transition-all hover:scale-105 shadow-[0_0_50px_rgba(37,99,235,0.4)] ring-2 ring-blue-500/50 ring-offset-2 ring-offset-black">
                     <Play className="w-5 h-5 mr-3 fill-white" /> Démarrer maintenant
@@ -471,7 +416,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* STATS STRIP */}
+      {/* STATS */}
       <section className="border-b border-white/5 bg-[#050505] relative z-20">
          <div className="max-w-[1400px] mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
@@ -483,7 +428,7 @@ export default function Home() {
          </div>
       </section>
 
-      {/* SERVICES GRID */}
+      {/* SERVICES */}
       <section id="services" className="py-32 px-6">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-end mb-20">
@@ -501,7 +446,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROCESS SECTION */}
+      {/* PROCESS */}
       <section id="process" className="py-32 px-6 bg-[#080808] border-y border-white/5">
         <div className="max-w-[1400px] mx-auto">
             <div className="flex flex-col lg:flex-row gap-20">
@@ -522,7 +467,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WORK SECTION */}
+      {/* WORK */}
       <section id="work" className="py-32 px-6 bg-zinc-900/20">
         <div className="max-w-[1400px] mx-auto">
           <div className="mb-20 text-center">
@@ -544,41 +489,23 @@ export default function Home() {
         </div>
       </section>
 
-   {/* --- SECTION PARTENAIRES (VERSION ROULANTE & CLEAN) --- */}
+      {/* CLIENTS MARQUEE - MODIFIÉ TAILLE PLUS GRANDE */}
       <section className="py-24 border-y border-white/5 bg-[#050505] overflow-hidden relative">
-        
-        <div className="max-w-[1400px] mx-auto px-6 mb-12 text-center">
-             {/* TITRE MODIFIABLE ICI */}
+        <div className="max-w-[1400px] mx-auto px-6 mb-16 text-center">
              <span className="text-blue-500 font-bold tracking-[0.3em] text-xs uppercase mb-2">Ils nous ont fait confiance</span>
              <h3 className="text-white text-xl md:text-2xl font-medium">Les leaders qui passent au niveau supérieur</h3>
         </div>
-
-        {/* CONTENEUR ROULANT */}
         <div className="relative w-full flex overflow-hidden">
-            
-            {/* Dégradés sur les côtés pour faire joli */}
             <div className="absolute top-0 left-0 w-32 h-full z-10 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none"></div>
             <div className="absolute top-0 right-0 w-32 h-full z-10 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none"></div>
-
-            {/* L'animation qui fait tourner les logos */}
-          <motion.div 
-                className="flex gap-16 items-center whitespace-nowrap"
-                animate={{ x: ["0%", "-50%"] }} 
-                transition={{ repeat: Infinity, ease: "linear", duration: 25 }} // J'ai ralenti un peu pour qu'on voit mieux
-            >
-                {/* On répète les logos */}
+          <motion.div className="flex gap-20 items-center whitespace-nowrap" animate={{ x: ["0%", "-50%"] }} transition={{ repeat: Infinity, ease: "linear", duration: 25 }}>
                 {[...clients, ...clients, ...clients, ...clients].map((client, i) => (
-                    <div key={i} className="relative group flex items-center justify-center min-w-[200px]"> {/* min-w plus grand */}
+                    <div key={i} className="relative group flex items-center justify-center min-w-[250px]">
                         <img 
-                            src={client.logo} 
-                            alt={client.name} 
-                            /* CORRECTIONS ICI : 
-                               1. h-32 : Beaucoup plus grand
-                               2. J'ai enlevé 'brightness-0 invert' pour qu'ils ne disparaissent pas
-                               3. grayscale : Reste en gris (pro) et passe en couleur au survol
-                            */
-                            className="h-32 w-auto object-contain transition-all duration-300
-                                       grayscale hover:grayscale-0 scale-100 hover:scale-110"
+                          src={client.logo} 
+                          alt={client.name} 
+                          className={`h-20 w-auto object-contain opacity-50 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0`} 
+                          style={{ transform: `scale(${client.scale})` }} 
                         />
                     </div>
                 ))}
@@ -586,151 +513,143 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS SECTION - AVIS RÉALISTES */}
-      <section className="py-32 px-6">
+      {/* WHY US - MODIFIÉ AVEC IMAGE ABOUT.JPG */}
+      <section id="about" className="py-32 px-6">
         <div className="max-w-[1400px] mx-auto">
-             <div className="mb-16 flex justify-between items-end">
-                <h2 className="text-3xl md:text-5xl font-medium">L'avis des clients</h2>
-                <div className="flex gap-2">
-                    <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-                    <span className="w-3 h-3 rounded-full bg-zinc-700"></span>
-                    <span className="w-3 h-3 rounded-full bg-zinc-700"></span>
-                </div>
-             </div>
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                 {testimonials.map((t, i) => (
-                     <TestimonialCard key={i} testimonial={t} index={i} />
-                 ))}
-             </div>
-        </div>
-      </section>
-
-      {/* ABOUT & PARTNERSHIPS - TEXTES PRO */}
-      <section id="about" className="py-32 px-6 bg-zinc-900/10">
-        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20">
-            <div>
-                <h2 className="text-4xl md:text-5xl font-medium mb-8">Qui sommes-nous ?</h2>
-                <div className="space-y-6 text-lg text-zinc-400 leading-relaxed">
-                    <p>ABM Media est une centrale créative dédiée à transformer vos visions en réalité. Nous sommes une équipe de passionnés, storytellers et stratèges.</p>
-                    <p>Du concept à l'exécution, nous apportons précision, créativité et innovation à chaque projet pour garantir que votre marque se démarque.</p>
-                </div>
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {partnerships.map((p, i) => (
-                        <PartnershipCard key={i} partnership={p} index={i} />
-                    ))}
-                </div>
-            </div>
-            <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 relative h-full min-h-[500px]">
-                <img src="/about.jpg" alt="Team Work" className="absolute inset-0 w-full h-full object-cover opacity-50 hover:opacity-80 transition-all duration-700 scale-105 hover:scale-100"/>
-                <div className="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black to-transparent w-full">
-                    <div className="text-white text-xl font-bold">Notre QG Créatif</div>
-                    <div className="text-zinc-400">Sousse, Tunisie</div>
-                </div>
-            </div>
-        </div>
-      </section>
-
-      {/* --- CONTACT SECTION AVEC NOUVEAU SELECT ROULANT --- */}
-      <section id="contact" className="py-32 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900/10 pointer-events-none"/>
-        <div className="max-w-4xl mx-auto relative z-10">
-            <div className="text-center mb-16">
-                <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Prêt à décoller ?</span>
-                <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Parlons de votre projet.</h2>
-                <p className="text-zinc-400 text-lg">Remplissez le formulaire ci-dessous et nous vous répondrons via WhatsApp.</p>
-            </div>
-
-            <form onSubmit={handleWhatsAppSubmit} className="space-y-6 bg-zinc-900/50 p-8 md:p-12 rounded-3xl border border-white/5 backdrop-blur-xl relative z-50">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-400 ml-1">Nom complet</label>
-                        <input required name="name" value={formData.name} onChange={handleInputChange} className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-blue-500 transition-colors text-white" placeholder="John Doe" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-400 ml-1">Email</label>
-                        <input required name="email" value={formData.email} onChange={handleInputChange} type="email" className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-blue-500 transition-colors text-white" placeholder="john@company.com" />
-                    </div>
-                </div>
-                
-                <div className="space-y-2 relative z-50">
-                    <label className="text-sm font-medium text-zinc-400 ml-1">Service souhaité</label>
-                    {/* UTILISATION DU NOUVEAU SELECT ROULANT */}
-                    <CustomSelect 
-                      options={serviceOptions} 
-                      value={formData.service} 
-                      onChange={handleServiceChange}
-                      placeholder="Sélectionnez un service..."
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
+                {/* Image Side */}
+                <div className="relative group">
+                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-700"></div>
+                    <img 
+                        src="/about.jpg" 
+                        alt="Team ABM" 
+                        className="relative rounded-2xl border border-white/10 shadow-2xl w-full object-cover h-[500px] grayscale group-hover:grayscale-0 transition-all duration-700" 
                     />
                 </div>
-
-                <div className="space-y-2 relative z-10">
-                    <label className="text-sm font-medium text-zinc-400 ml-1">Message</label>
-                    <textarea required name="message" value={formData.message} onChange={handleInputChange} rows={4} className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-4 focus:outline-none focus:border-blue-500 transition-colors text-white resize-none" placeholder="Décrivez brièvement votre projet..." />
-                </div>
-
-                <Button type="submit" className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-xl transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:shadow-[0_0_50px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2 relative z-10">
-                    Envoyer via WhatsApp <Send className="w-5 h-5" />
-                </Button>
-            </form>
-        </div>
-      </section>
-
-      {/* --- FOOTER & SOCIAL LINKS (BAS) --- */}
-      <footer className="bg-zinc-950 border-t border-white/10 pt-20 pb-10 px-6">
-        <div className="max-w-[1400px] mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-                <div className="col-span-1 md:col-span-2">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xs">ABM</div>
-                        <span className="text-xl font-bold tracking-tight text-white">ABM MEDIA</span>
-                    </div>
-                    <p className="text-zinc-500 max-w-sm mb-8">
-                        Agence de production et de stratégie digitale basée en Tunisie. Nous créons du contenu qui captive et convertit.
+                {/* Text Side */}
+                <div>
+                    <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Notre ADN</span>
+                    <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-6">Plus qu'une agence,<br/>un partenaire de croissance.</h2>
+                    <p className="text-zinc-400 text-lg leading-relaxed">
+                        Dans un monde saturé de bruit, nous créons du signal. Notre approche hybride mêle data, psychologie du consommateur et créativité artistique pour délivrer des résultats mesurables.
                     </p>
-                    {/* LIENS RÉSEAUX SOCIAUX PIED DE PAGE */}
-                    <div className="flex gap-4">
-                        <a href="https://www.instagram.com/abmmedia_?igsh=ZXdmYWp4M3pscmlk" target="_blank" className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:bg-white hover:text-black transition-all duration-300">
-                            <Instagram className="w-5 h-5" />
-                        </a>
-                        <a href="https://www.facebook.com/share/1QPqbBYruR/?mibextid=wwXIfr" target="_blank" className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white transition-all duration-300">
-                            <Facebook className="w-5 h-5" />
-                        </a>
-                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:bg-white hover:text-black transition-all duration-300">
-                            <Linkedin className="w-5 h-5" />
-                        </a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 className="text-white font-bold mb-6">Services</h4>
-                    <ul className="space-y-3 text-zinc-500 text-sm">
-                        <li className="hover:text-blue-400 cursor-pointer">Développement Web</li>
-                        <li className="hover:text-blue-400 cursor-pointer">Production Vidéo</li>
-                        <li className="hover:text-blue-400 cursor-pointer">Branding</li>
-                        <li className="hover:text-blue-400 cursor-pointer">Stratégie Social Media</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 className="text-white font-bold mb-6">Contact</h4>
-                    <ul className="space-y-3 text-zinc-500 text-sm">
-                        <li>Sousse, Tunisie</li>
-                        <li>contact@abmmedia.com</li>
-                        <li>+216 58 639 342</li>
-                    </ul>
                 </div>
             </div>
             
-            <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-zinc-600">
-                <p>&copy; 2026 ABM Media. Tous droits réservés.</p>
-                <div className="flex gap-6 mt-4 md:mt-0">
-                    <span className="hover:text-white cursor-pointer">Mentions Légales</span>
-                    <span className="hover:text-white cursor-pointer">Confidentialité</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {partnerships.map((partnership, index) => (
+                    <PartnershipCard key={index} partnership={partnership} index={index} />
+                ))}
+            </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-32 px-6 bg-zinc-900/30 border-y border-white/5">
+        <div className="max-w-[1400px] mx-auto">
+            <div className="text-center mb-16">
+                <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Témoignages</span>
+                <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white">Ce qu'ils disent de nous</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {testimonials.map((testimonial, index) => (
+                    <TestimonialCard key={index} testimonial={testimonial} index={index} />
+                ))}
+            </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="py-32 px-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto relative z-10">
+            <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
+                <div className="text-center mb-10">
+                    <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Let's talk business</span>
+                    <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">Prêt à dominer votre marché ?</h2>
+                    <p className="text-zinc-400">Remplissez le formulaire ci-dessous pour démarrer une collaboration exclusive.</p>
                 </div>
+
+                <form onSubmit={handleWhatsAppSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-zinc-300 ml-1">Nom complet</label>
+                            <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 text-white placeholder:text-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all" required />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-zinc-300 ml-1">Email professionnel</label>
+                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="john@company.com" className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 text-white placeholder:text-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all" required />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-zinc-300 ml-1">Service intéressé</label>
+                        <CustomSelect options={serviceOptions} value={formData.service} onChange={handleServiceChange} placeholder="Sélectionnez un service" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-zinc-300 ml-1">Parlez-nous de votre projet</label>
+                        <textarea name="message" value={formData.message} onChange={handleInputChange} placeholder="Objectifs, budget, délais..." className="w-full h-40 bg-zinc-950 border border-white/10 rounded-xl p-6 text-white placeholder:text-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all resize-none" required />
+                    </div>
+                    <Button type="submit" className="w-full h-16 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold text-lg rounded-xl shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:shadow-[0_0_50px_rgba(37,99,235,0.5)] transition-all duration-300 transform hover:-translate-y-1">
+                        Envoyer ma demande <Send className="w-5 h-5 ml-2" />
+                    </Button>
+                    <p className="text-center text-zinc-500 text-xs mt-4">En cliquant sur envoyer, vous serez redirigé vers WhatsApp pour finaliser l'échange.</p>
+                </form>
+            </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-black border-t border-white/10 pt-20 pb-10 px-6">
+        <div className="max-w-[1400px] mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-start mb-16 gap-10">
+                <div className="max-w-sm">
+                    <div className="flex items-center gap-2 mb-6">
+                        <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center font-bold text-white text-xs">ABM</div>
+                        <span className="text-xl font-bold text-white">ABM MEDIA</span>
+                    </div>
+                    <p className="text-zinc-400 leading-relaxed mb-6">Agence digitale nouvelle génération. Nous transformons les marques en mouvements culturels grâce à une stratégie audacieuse et une production visuelle haut de gamme.</p>
+                    <div className="flex gap-4">
+                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all"><Instagram className="w-4 h-4" /></a>
+                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all"><Facebook className="w-4 h-4" /></a>
+                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all"><Linkedin className="w-4 h-4" /></a>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 md:gap-20">
+                    <div>
+                        <h4 className="text-white font-bold mb-6">Menu</h4>
+                        <ul className="space-y-4 text-zinc-400 text-sm">
+                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('services')}>Services</li>
+                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('work')}>Projets</li>
+                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('process')}>Process</li>
+                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('about')}>À propos</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="text-white font-bold mb-6">Légal</h4>
+                        <ul className="space-y-4 text-zinc-400 text-sm">
+                            <li className="hover:text-white cursor-pointer">Mentions Légales</li>
+                            <li className="hover:text-white cursor-pointer">Confidentialité</li>
+                            <li className="hover:text-white cursor-pointer">CGV</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="text-white font-bold mb-6">Contact</h4>
+                        <ul className="space-y-4 text-zinc-400 text-sm">
+                            <li className="flex items-center gap-2"><Mail className="w-4 h-4 text-blue-500" /> contact@abm-media.com</li>
+                            <li className="flex items-center gap-2"><Phone className="w-4 h-4 text-blue-500" /> +216 58 639 342</li>
+                            <li className="flex items-center gap-2"><MapPin className="w-4 h-4 text-blue-500" /> Sousse, Tunisie</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-600">
+                <p>&copy; {new Date().getFullYear()} ABM Media. All rights reserved.</p>
+                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span>Systems Operational</span></div>
             </div>
         </div>
       </footer>
-
     </div>
   )
 }
