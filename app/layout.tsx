@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   title: "ABM Media - Your Vision, Our Inspiration",
   description: "Creative agency specializing in branding...",
   icons: {
-    icon: '/icon.svg', // On pointe directement dessus
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    icon: '/icon.svg?v=1',      // <--- AJOUTE ÇA
+    shortcut: '/icon.svg?v=1',  // <--- AJOUTE ÇA
+    apple: '/icon.svg?v=1',     // <--- AJOUTE ÇA
   },
 };
 
