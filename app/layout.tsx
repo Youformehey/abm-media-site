@@ -5,10 +5,10 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// On définit les métadonnées ici (Titre du site, etc.)
 export const metadata: Metadata = {
   title: "ABM Media",
   description: "Your Vision, Our Inspiration",
+  // Pas besoin de préciser 'icons', Next.js détecte automatiquement favicon.ico dans le dossier app
 };
 
 export default function RootLayout({
@@ -18,12 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* C'est ici qu'on force l'icône manuellement 👇 */}
-      <head>
-        <link rel="icon" href="/logo-abm-final.svg" sizes="any" />
-      </head>
-      {/* 👆 Fin de l'ajout manuel */}
-
+      {/* J'ai supprimé la balise <head> manuelle. Next.js gère tout. */}
       <body className={inter.className}>
         {children}
         <Analytics />
