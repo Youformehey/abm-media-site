@@ -5,18 +5,10 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// On définit les métadonnées ici (Titre du site, etc.)
 export const metadata: Metadata = {
   title: "ABM Media",
   description: "Your Vision, Our Inspiration",
-  icons: {
-    icon: '/logo-abm-final.svg', // On pointe vers le fichier dans public
-    shortcut: '/logo-abm-final.svg',
-    apple: '/logo-abm-final.svg',
-    other: {
-      rel: 'apple-touch-icon-precomposed',
-      url: '/logo-abm-final.svg',
-    },
-  },
 };
 
 export default function RootLayout({
@@ -26,6 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* C'est ici qu'on force l'icône manuellement 👇 */}
+      <head>
+        <link rel="icon" href="/logo-abm-final.svg" sizes="any" />
+      </head>
+      {/* 👆 Fin de l'ajout manuel */}
+
       <body className={inter.className}>
         {children}
         <Analytics />
