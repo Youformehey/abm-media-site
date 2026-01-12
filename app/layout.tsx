@@ -5,10 +5,10 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// On laisse metadata simple
 export const metadata: Metadata = {
   title: "ABM Media",
   description: "Your Vision, Our Inspiration",
-  // Pas besoin de préciser 'icons', Next.js détecte automatiquement favicon.ico dans le dossier app
 };
 
 export default function RootLayout({
@@ -16,9 +16,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Astuce: j'ajoute "?v=2" pour forcer le navigateur à oublier l'ancienne icône
   return (
     <html lang="en">
-      {/* J'ai supprimé la balise <head> manuelle. Next.js gère tout. */}
+      <head>
+        <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+      </head>
       <body className={inter.className}>
         {children}
         <Analytics />
