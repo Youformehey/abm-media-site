@@ -7,12 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ABM Media - Your Vision, Our Inspiration",
-  description: "Creative agency specializing in branding...",
-  icons: {
-    icon: '/icon.svg?v=1',      // <--- AJOUTE ÇA
-    shortcut: '/icon.svg?v=1',  // <--- AJOUTE ÇA
-    apple: '/icon.svg?v=1',     // <--- AJOUTE ÇA
-  },
+  description: "Creative agency specializing in branding, web creation, content, graphic design, and video editing.",
+  // J'AI TOUT SUPPRIMÉ ICI (icons: ...). 
+  // Next.js va trouver src/app/icon.svg tout seul.
 };
 
 export default function RootLayout({
