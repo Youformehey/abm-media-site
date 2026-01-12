@@ -6,10 +6,17 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ABM Media - Your Vision, Our Inspiration",
-  description: "Creative agency specializing in branding, web creation, content, graphic design, and video editing.",
-  // J'AI TOUT SUPPRIMÉ ICI (icons: ...). 
-  // Next.js va trouver src/app/icon.svg tout seul.
+  title: "ABM Media",
+  description: "Your Vision, Our Inspiration",
+  icons: {
+    icon: '/logo-abm-final.svg', // On pointe vers le fichier dans public
+    shortcut: '/logo-abm-final.svg',
+    apple: '/logo-abm-final.svg',
+    other: {
+      rel: 'apple-touch-icon-precomposed',
+      url: '/logo-abm-final.svg',
+    },
+  },
 };
 
 export default function RootLayout({
