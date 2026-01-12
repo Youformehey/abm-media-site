@@ -7,9 +7,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ABM Media - Your Vision, Our Inspiration",
-  description: "Creative agency specializing in branding, web creation, content, graphic design, and video editing.",
+  description: "Creative agency specializing in branding...",
   icons: {
-    icon: "/abm-icon.svg", // J'ai ajouté le "/" au début, c'est important !
+    icon: '/icon.svg', // On pointe directement dessus
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
   },
 };
 
