@@ -267,11 +267,17 @@ export default function Home() {
   const serviceOptions = services.map(s => s.title);
 
   const clients = [
-      { name: "Nutribeast", logo: "/logos_01.gif", scale: 1.2 },
-      { name: "ITKAN", logo: "/itkanongblue.png", scale: 1 },
-      { name: "DUKA", logo: "/logos_07.gif", scale: 1.2 },
-      { name: "SS Logo", logo: "/logos_03.gif", scale: 1 },
-      { name: "Zaitouna", logo: "/logo.png", scale: 1 },
+      { name: "Client 01", logo: "/logos_01.png", scale: 3 },
+      { name: "Client 03", logo: "/logos_03.png", scale: 1.5 },
+      { name: "Client 06", logo: "/logos_06.png", scale: 1.5 },
+      { name: "Client 07", logo: "/logos_07.png", scale: 2.5 },
+      { name: "Client 08", logo: "/logos_08.png", scale: 1 },
+      { name: "Client 09", logo: "/logos_09.png", scale: 1 },
+      { name: "Client 10", logo: "/logos_10.png", scale: 1 },
+      { name: "Client 11", logo: "/logos_11.png", scale: 1.25 },
+      { name: "Client 12", logo: "/logos_12.png", scale: 1 },
+      { name: "ITKAN", logo: "/itkanongblue.png", scale: 1.25 },
+      { name: "Zaitouna", logo: "/logos_00.png", scale: 2},
   ]
 
   const projects = [
@@ -489,7 +495,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CLIENTS MARQUEE - MODIFIÉ TAILLE PLUS GRANDE */}
+      {/* CLIENTS MARQUEE - TOUS EN PNG AVEC EFFET DE TRANSPARENCE */}
       <section className="py-24 border-y border-white/5 bg-[#050505] overflow-hidden relative">
         <div className="max-w-[1400px] mx-auto px-6 mb-16 text-center">
              <span className="text-blue-500 font-bold tracking-[0.3em] text-xs uppercase mb-2">Ils nous ont fait confiance</span>
@@ -498,13 +504,13 @@ export default function Home() {
         <div className="relative w-full flex overflow-hidden">
             <div className="absolute top-0 left-0 w-32 h-full z-10 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none"></div>
             <div className="absolute top-0 right-0 w-32 h-full z-10 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none"></div>
-          <motion.div className="flex gap-20 items-center whitespace-nowrap" animate={{ x: ["0%", "-50%"] }} transition={{ repeat: Infinity, ease: "linear", duration: 25 }}>
-                {[...clients, ...clients, ...clients, ...clients].map((client, i) => (
-                    <div key={i} className="relative group flex items-center justify-center min-w-[250px]">
+          <motion.div className="flex gap-20 items-center whitespace-nowrap" animate={{ x: ["0%", "-50%"] }} transition={{ repeat: Infinity, ease: "linear", duration: 30 }}>
+                {[...clients, ...clients].map((client, i) => (
+                    <div key={i} className="relative group flex items-center justify-center min-w-[200px]">
                         <img 
                           src={client.logo} 
                           alt={client.name} 
-                          className={`h-20 w-auto object-contain opacity-50 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0`} 
+                          className={`h-16 w-auto object-contain opacity-40 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 mix-blend-screen`} 
                           style={{ transform: `scale(${client.scale})` }} 
                         />
                     </div>
@@ -513,11 +519,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY US - MODIFIÉ AVEC IMAGE ABOUT.JPG */}
+      {/* WHY US / ABOUT */}
       <section id="about" className="py-32 px-6">
         <div className="max-w-[1400px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
-                {/* Image Side */}
                 <div className="relative group">
                     <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-700"></div>
                     <img 
@@ -526,127 +531,144 @@ export default function Home() {
                         className="relative rounded-2xl border border-white/10 shadow-2xl w-full object-cover h-[500px] grayscale group-hover:grayscale-0 transition-all duration-700" 
                     />
                 </div>
-                {/* Text Side */}
                 <div>
                     <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Notre ADN</span>
-                    <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-6">Plus qu'une agence,<br/>un partenaire de croissance.</h2>
-                    <p className="text-zinc-400 text-lg leading-relaxed">
-                        Dans un monde saturé de bruit, nous créons du signal. Notre approche hybride mêle data, psychologie du consommateur et créativité artistique pour délivrer des résultats mesurables.
+                    <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">Plus qu'une agence, un partenaire de croissance.</h2>
+                    <p className="text-zinc-400 text-lg leading-relaxed mb-10">
+                        Chez ABM Media, nous fusionnons l'art visuel et la science des données. Chaque pixel est pensé pour l'émotion, chaque ligne de code est écrite pour la performance. Notre mission est de transformer votre présence digitale en un actif stratégique puissant.
                     </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {partnerships.map((item, i) => (
+                            <div key={i} className="flex gap-4">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                                    <item.icon className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h4 className="text-white font-medium mb-1">{item.title}</h4>
+                                    <p className="text-zinc-500 text-sm leading-snug">{item.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {partnerships.map((partnership, index) => (
-                    <PartnershipCard key={index} partnership={partnership} index={index} />
-                ))}
-            </div>
-        </div>
-      </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-32 px-6 bg-zinc-900/30 border-y border-white/5">
-        <div className="max-w-[1400px] mx-auto">
-            <div className="text-center mb-16">
-                <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Témoignages</span>
-                <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white">Ce qu'ils disent de nous</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {testimonials.map((testimonial, index) => (
-                    <TestimonialCard key={index} testimonial={testimonial} index={index} />
-                ))}
+            <div className="mt-32">
+                <div className="text-center mb-16">
+                    <h3 className="text-3xl font-medium text-white">Ce que disent nos partenaires</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {testimonials.map((t, i) => (
+                        <TestimonialCard key={i} testimonial={t} index={i} />
+                    ))}
+                </div>
             </div>
         </div>
       </section>
 
       {/* CONTACT */}
       <section id="contact" className="py-32 px-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
-
-        <div className="max-w-4xl mx-auto relative z-10">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
-                <div className="text-center mb-10">
-                    <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Let's talk business</span>
-                    <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">Prêt à dominer votre marché ?</h2>
-                    <p className="text-zinc-400">Remplissez le formulaire ci-dessous pour démarrer une collaboration exclusive.</p>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+        <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                <div>
+                    <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8">Prêt à marquer <br/><span className="text-blue-500">l'histoire ?</span></h2>
+                    <p className="text-zinc-400 text-xl mb-12 max-w-md">Discutons de votre projet et voyons comment nous pouvons propulser votre marque.</p>
+                    
+                    <div className="space-y-8">
+                        <div className="flex items-center gap-6 group">
+                            <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center group-hover:border-blue-500/50 transition-colors">
+                                <Mail className="w-6 h-6 text-blue-500" />
+                            </div>
+                            <div>
+                                <p className="text-zinc-500 text-sm uppercase tracking-widest font-bold">Email</p>
+                                <p className="text-white text-lg">contact@abm-media.com</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-6 group">
+                            <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center group-hover:border-blue-500/50 transition-colors">
+                                <Phone className="w-6 h-6 text-blue-500" />
+                            </div>
+                            <div>
+                                <p className="text-zinc-500 text-sm uppercase tracking-widest font-bold">WhatsApp</p>
+                                <p className="text-white text-lg">+216 58 639 342</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <form onSubmit={handleWhatsAppSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-zinc-300 ml-1">Nom complet</label>
-                            <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 text-white placeholder:text-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all" required />
+                <div className="bg-zinc-900/50 border border-white/5 p-8 md:p-12 rounded-3xl backdrop-blur-xl">
+                    <form onSubmit={handleWhatsAppSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Nom Complet</label>
+                                <input name="name" value={formData.name} onChange={handleInputChange} required className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 focus:border-blue-500 outline-none transition-all text-white" placeholder="John Doe" />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Email</label>
+                                <input name="email" type="email" value={formData.email} onChange={handleInputChange} required className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 focus:border-blue-500 outline-none transition-all text-white" placeholder="john@company.com" />
+                            </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-zinc-300 ml-1">Email professionnel</label>
-                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="john@company.com" className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 text-white placeholder:text-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all" required />
+                            <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Service souhaité</label>
+                            <CustomSelect options={serviceOptions} value={formData.service} onChange={handleServiceChange} placeholder="Sélectionnez un service" />
                         </div>
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 ml-1">Service intéressé</label>
-                        <CustomSelect options={serviceOptions} value={formData.service} onChange={handleServiceChange} placeholder="Sélectionnez un service" />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 ml-1">Parlez-nous de votre projet</label>
-                        <textarea name="message" value={formData.message} onChange={handleInputChange} placeholder="Objectifs, budget, délais..." className="w-full h-40 bg-zinc-950 border border-white/10 rounded-xl p-6 text-white placeholder:text-zinc-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none transition-all resize-none" required />
-                    </div>
-                    <Button type="submit" className="w-full h-16 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold text-lg rounded-xl shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:shadow-[0_0_50px_rgba(37,99,235,0.5)] transition-all duration-300 transform hover:-translate-y-1">
-                        Envoyer ma demande <Send className="w-5 h-5 ml-2" />
-                    </Button>
-                    <p className="text-center text-zinc-500 text-xs mt-4">En cliquant sur envoyer, vous serez redirigé vers WhatsApp pour finaliser l'échange.</p>
-                </form>
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Votre Message</label>
+                            <textarea name="message" value={formData.message} onChange={handleInputChange} required className="w-full h-40 bg-zinc-950 border border-white/10 rounded-xl p-6 focus:border-blue-500 outline-none transition-all text-white resize-none" placeholder="Parlez-nous de vos objectifs..." />
+                        </div>
+                        <Button type="submit" className="w-full h-16 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg group">
+                            Envoyer la demande <Send className="w-5 h-5 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                        </Button>
+                    </form>
+                </div>
             </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-black border-t border-white/10 pt-20 pb-10 px-6">
-        <div className="max-w-[1400px] mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-start mb-16 gap-10">
-                <div className="max-w-sm">
-                    <div className="flex items-center gap-2 mb-6">
-                        <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center font-bold text-white text-xs">ABM</div>
-                        <span className="text-xl font-bold text-white">ABM MEDIA</span>
+      <footer className="py-20 px-6 border-t border-white/5 bg-[#020202]">
+        <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+                <div className="md:col-span-2">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]">ABM</div>
+                        <span className="text-2xl font-bold tracking-tighter">ABM MEDIA</span>
                     </div>
-                    <p className="text-zinc-400 leading-relaxed mb-6">Agence digitale nouvelle génération. Nous transformons les marques en mouvements culturels grâce à une stratégie audacieuse et une production visuelle haut de gamme.</p>
-                    <div className="flex gap-4">
-                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all"><Instagram className="w-4 h-4" /></a>
-                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all"><Facebook className="w-4 h-4" /></a>
-                        <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all"><Linkedin className="w-4 h-4" /></a>
-                    </div>
+                    <p className="text-zinc-500 max-w-sm text-lg leading-relaxed">
+                        Créateur d'expériences digitales et visuelles conçues pour durer. Nous transformons les idées en héritages culturels.
+                    </p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 md:gap-20">
-                    <div>
-                        <h4 className="text-white font-bold mb-6">Menu</h4>
-                        <ul className="space-y-4 text-zinc-400 text-sm">
-                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('services')}>Services</li>
-                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('work')}>Projets</li>
-                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('process')}>Process</li>
-                            <li className="hover:text-blue-400 cursor-pointer transition-colors" onClick={() => scrollToSection('about')}>À propos</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="text-white font-bold mb-6">Légal</h4>
-                        <ul className="space-y-4 text-zinc-400 text-sm">
-                            <li className="hover:text-white cursor-pointer">Mentions Légales</li>
-                            <li className="hover:text-white cursor-pointer">Confidentialité</li>
-                            <li className="hover:text-white cursor-pointer">CGV</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="text-white font-bold mb-6">Contact</h4>
-                        <ul className="space-y-4 text-zinc-400 text-sm">
-                            <li className="flex items-center gap-2"><Mail className="w-4 h-4 text-blue-500" /> contact@abm-media.com</li>
-                            <li className="flex items-center gap-2"><Phone className="w-4 h-4 text-blue-500" /> +216 58 639 342</li>
-                            <li className="flex items-center gap-2"><MapPin className="w-4 h-4 text-blue-500" /> Sousse, Tunisie</li>
-                        </ul>
+                <div>
+                    <h4 className="text-white font-bold mb-6">Navigation</h4>
+                    <ul className="space-y-4 text-zinc-400">
+                        <li><button onClick={() => scrollToSection('services')} className="hover:text-blue-500 transition-colors">Services</button></li>
+                        <li><button onClick={() => scrollToSection('work')} className="hover:text-blue-500 transition-colors">Portfolio</button></li>
+                        <li><button onClick={() => scrollToSection('process')} className="hover:text-blue-500 transition-colors">Notre Process</button></li>
+                        <li><button onClick={() => scrollToSection('about')} className="hover:text-blue-500 transition-colors">À Propos</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 className="text-white font-bold mb-6">Social</h4>
+                    <div className="flex gap-4">
+                        <a href="https://www.instagram.com/abmmedia_?igsh=ZXdmYWp4M3pscmlk" target="_blank" className="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center hover:bg-blue-600 transition-all text-zinc-400 hover:text-white">
+                            <Instagram className="w-5 h-5" />
+                        </a>
+                        <a href="https://www.facebook.com/share/1QPqbBYruR/?mibextid=wwXIfr" target="_blank" className="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center hover:bg-blue-600 transition-all text-zinc-400 hover:text-white">
+                            <Facebook className="w-5 h-5" />
+                        </a>
+                        <a href="#" className="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center hover:bg-blue-600 transition-all text-zinc-400 hover:text-white">
+                            <Linkedin className="w-5 h-5" />
+                        </a>
                     </div>
                 </div>
             </div>
-            <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-600">
-                <p>&copy; {new Date().getFullYear()} ABM Media. All rights reserved.</p>
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span>Systems Operational</span></div>
+            <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-zinc-600 text-sm">
+                <p>&copy; {new Date().getFullYear()} ABM Media. Tous droits réservés.</p>
+                <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span>Disponible pour de nouveaux projets</span>
+                </div>
             </div>
         </div>
       </footer>
