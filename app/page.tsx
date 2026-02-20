@@ -149,20 +149,6 @@ const ProjectCard = ({ project, index, onHover, onLeave, className }: any) => {
   )
 }
 
-const PartnershipCard = ({ partnership, index }: any) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.2 }}
-    className="bg-zinc-900/50 border border-white/5 p-8 rounded-xl hover:border-blue-500/30 transition-colors group"
-  >
-    <partnership.icon className="w-12 h-12 text-blue-500 mb-6 group-hover:scale-110 transition-transform duration-300" />
-    <h3 className="text-xl font-medium text-white mb-3">{partnership.title}</h3>
-    <p className="text-sm text-zinc-400 leading-relaxed">{partnership.description}</p>
-  </motion.div>
-)
-
 const ProcessStep = ({ step, index, isLast }: any) => (
     <motion.div 
         initial={{ opacity: 0, x: -20 }}
@@ -266,18 +252,19 @@ export default function Home() {
   ]
   const serviceOptions = services.map(s => s.title);
 
+  // LOGOS AGRANDIS ET TOUS EN PNG
   const clients = [
       { name: "Client 01", logo: "/logos_01.png", scale: 3 },
       { name: "Client 03", logo: "/logos_03.png", scale: 1.5 },
       { name: "Client 06", logo: "/logos_06.png", scale: 1.5 },
-      { name: "Client 07", logo: "/logos_07.png", scale: 2.5 },
-      { name: "Client 08", logo: "/logos_08.png", scale: 1 },
+      { name: "Client 07", logo: "/logos_07.png", scale: 2 },
+      { name: "Client 08", logo: "/logos_08.png", scale: 0.8 },
       { name: "Client 09", logo: "/logos_09.png", scale: 1 },
       { name: "Client 10", logo: "/logos_10.png", scale: 1 },
-      { name: "Client 11", logo: "/logos_11.png", scale: 1.25 },
-      { name: "Client 12", logo: "/logos_12.png", scale: 1 },
-      { name: "ITKAN", logo: "/itkanongblue.png", scale: 1.25 },
-      { name: "Zaitouna", logo: "/logos_00.png", scale: 2},
+      { name: "Client 11", logo: "/logos_11.png", scale: 1.2 },
+      { name: "Client 12", logo: "/logos_12.png", scale: 1.2 },
+      { name: "ITKAN", logo: "/itkanongblue.png", scale: 1.2 },
+      { name: "Zaitouna", logo: "/logos_00.png", scale: 2 },
   ]
 
   const projects = [
@@ -328,7 +315,7 @@ export default function Home() {
   return (
     <div ref={containerRef} className="min-h-screen bg-[#020202] text-white overflow-x-hidden font-sans selection:bg-blue-500/30">
       
-      {/* --- NAVBAR --- */}
+      {/* --- NAVBAR AVEC LOGO IMAGE --- */}
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -339,14 +326,15 @@ export default function Home() {
             flex items-center justify-between px-8 py-4 rounded-2xl transition-all duration-500
             ${scrolled ? "bg-black/40 backdrop-blur-2xl border border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] w-full max-w-6xl" : "bg-transparent border border-transparent w-full max-w-[1500px]"}
         `}>
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+            {/* NOUVEAU LOGO NAV */}
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
                 <div className="relative">
-                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-sm tracking-tighter shadow-[0_0_20px_rgba(37,99,235,0.6)] z-10 relative">ABM</div>
-                    <div className="absolute inset-0 bg-blue-600 rounded-lg blur-lg opacity-50 animate-pulse"></div>
-                </div>
-                <div className="flex flex-col">
-                    <span className="text-xl font-bold tracking-tight text-white leading-none">ABM MEDIA</span>
-                    <span className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase">Global Agency</span>
+                    <img 
+                        src="/logonavbar.png" 
+                        alt="ABM Media" 
+                        className="h-12 w-auto object-contain brightness-0 invert" 
+                    />
+                    <div className="absolute inset-0 bg-blue-600/10 blur-xl opacity-50"></div>
                 </div>
             </div>
             
@@ -489,28 +477,29 @@ export default function Home() {
             <ProjectCard project={projects[5]} index={5} className="md:col-span-3 md:row-span-1" />
             <ProjectCard project={projects[6]} index={6} className="md:col-span-3 md:row-span-1" />
           </div>
-           <div className="mt-12 text-center">
-               <Button variant="outline" className="rounded-full border-white/10 hover:bg-white/10 px-8">Voir plus de projets</Button>
-           </div>
         </div>
       </section>
 
-      {/* CLIENTS MARQUEE - TOUS EN PNG AVEC EFFET DE TRANSPARENCE */}
+      {/* CLIENTS MARQUEE - LOGOS AGRANDIS */}
       <section className="py-24 border-y border-white/5 bg-[#050505] overflow-hidden relative">
         <div className="max-w-[1400px] mx-auto px-6 mb-16 text-center">
              <span className="text-blue-500 font-bold tracking-[0.3em] text-xs uppercase mb-2">Ils nous ont fait confiance</span>
-             <h3 className="text-white text-xl md:text-2xl font-medium">Les leaders qui passent au niveau supérieur</h3>
+             <h3 className="text-white text-xl md:text-3xl font-medium">Les leaders qui passent au niveau supérieur</h3>
         </div>
         <div className="relative w-full flex overflow-hidden">
-            <div className="absolute top-0 left-0 w-32 h-full z-10 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none"></div>
-            <div className="absolute top-0 right-0 w-32 h-full z-10 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none"></div>
-          <motion.div className="flex gap-20 items-center whitespace-nowrap" animate={{ x: ["0%", "-50%"] }} transition={{ repeat: Infinity, ease: "linear", duration: 30 }}>
+            <div className="absolute top-0 left-0 w-40 h-full z-10 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-40 h-full z-10 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none"></div>
+          <motion.div 
+            className="flex gap-24 items-center whitespace-nowrap" 
+            animate={{ x: ["0%", "-50%"] }} 
+            transition={{ repeat: Infinity, ease: "linear", duration: 35 }}
+          >
                 {[...clients, ...clients].map((client, i) => (
-                    <div key={i} className="relative group flex items-center justify-center min-w-[200px]">
+                    <div key={i} className="relative group flex items-center justify-center min-w-[250px]">
                         <img 
                           src={client.logo} 
                           alt={client.name} 
-                          className={`h-16 w-auto object-contain opacity-40 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 mix-blend-screen`} 
+                          className="h-24 w-auto object-contain opacity-40 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 mix-blend-screen" 
                           style={{ transform: `scale(${client.scale})` }} 
                         />
                     </div>
@@ -519,7 +508,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY US / ABOUT */}
+      {/* ABOUT */}
       <section id="about" className="py-32 px-6">
         <div className="max-w-[1400px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
@@ -535,7 +524,7 @@ export default function Home() {
                     <span className="text-blue-500 font-bold tracking-widest uppercase text-xs mb-4 block">Notre ADN</span>
                     <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-8">Plus qu'une agence, un partenaire de croissance.</h2>
                     <p className="text-zinc-400 text-lg leading-relaxed mb-10">
-                        Chez ABM Media, nous fusionnons l'art visuel et la science des données. Chaque pixel est pensé pour l'émotion, chaque ligne de code est écrite pour la performance. Notre mission est de transformer votre présence digitale en un actif stratégique puissant.
+                        Chez ABM Media, nous fusionnons l'art visuel et la science des données. Chaque pixel est pensé pour l'émotion, chaque ligne de code est écrite pour la performance.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {partnerships.map((item, i) => (
@@ -554,9 +543,6 @@ export default function Home() {
             </div>
 
             <div className="mt-32">
-                <div className="text-center mb-16">
-                    <h3 className="text-3xl font-medium text-white">Ce que disent nos partenaires</h3>
-                </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {testimonials.map((t, i) => (
                         <TestimonialCard key={i} testimonial={t} index={i} />
@@ -573,8 +559,6 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
                 <div>
                     <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8">Prêt à marquer <br/><span className="text-blue-500">l'histoire ?</span></h2>
-                    <p className="text-zinc-400 text-xl mb-12 max-w-md">Discutons de votre projet et voyons comment nous pouvons propulser votre marque.</p>
-                    
                     <div className="space-y-8">
                         <div className="flex items-center gap-6 group">
                             <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center group-hover:border-blue-500/50 transition-colors">
@@ -600,25 +584,13 @@ export default function Home() {
                 <div className="bg-zinc-900/50 border border-white/5 p-8 md:p-12 rounded-3xl backdrop-blur-xl">
                     <form onSubmit={handleWhatsAppSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Nom Complet</label>
-                                <input name="name" value={formData.name} onChange={handleInputChange} required className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 focus:border-blue-500 outline-none transition-all text-white" placeholder="John Doe" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Email</label>
-                                <input name="email" type="email" value={formData.email} onChange={handleInputChange} required className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 focus:border-blue-500 outline-none transition-all text-white" placeholder="john@company.com" />
-                            </div>
+                            <input name="name" value={formData.name} onChange={handleInputChange} required className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 focus:border-blue-500 outline-none text-white" placeholder="Nom Complet" />
+                            <input name="email" type="email" value={formData.email} onChange={handleInputChange} required className="w-full h-16 bg-zinc-950 border border-white/10 rounded-xl px-6 focus:border-blue-500 outline-none text-white" placeholder="Email" />
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Service souhaité</label>
-                            <CustomSelect options={serviceOptions} value={formData.service} onChange={handleServiceChange} placeholder="Sélectionnez un service" />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Votre Message</label>
-                            <textarea name="message" value={formData.message} onChange={handleInputChange} required className="w-full h-40 bg-zinc-950 border border-white/10 rounded-xl p-6 focus:border-blue-500 outline-none transition-all text-white resize-none" placeholder="Parlez-nous de vos objectifs..." />
-                        </div>
-                        <Button type="submit" className="w-full h-16 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg group">
-                            Envoyer la demande <Send className="w-5 h-5 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                        <CustomSelect options={serviceOptions} value={formData.service} onChange={handleServiceChange} placeholder="Sélectionnez un service" />
+                        <textarea name="message" value={formData.message} onChange={handleInputChange} required className="w-full h-40 bg-zinc-950 border border-white/10 rounded-xl p-6 focus:border-blue-500 outline-none text-white resize-none" placeholder="Votre Message..." />
+                        <Button type="submit" className="w-full h-16 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg">
+                            Envoyer la demande <Send className="w-5 h-5 ml-2" />
                         </Button>
                     </form>
                 </div>
@@ -628,47 +600,15 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="py-20 px-6 border-t border-white/5 bg-[#020202]">
-        <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
-                <div className="md:col-span-2">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]">ABM</div>
-                        <span className="text-2xl font-bold tracking-tighter">ABM MEDIA</span>
-                    </div>
-                    <p className="text-zinc-500 max-w-sm text-lg leading-relaxed">
-                        Créateur d'expériences digitales et visuelles conçues pour durer. Nous transformons les idées en héritages culturels.
-                    </p>
-                </div>
-                <div>
-                    <h4 className="text-white font-bold mb-6">Navigation</h4>
-                    <ul className="space-y-4 text-zinc-400">
-                        <li><button onClick={() => scrollToSection('services')} className="hover:text-blue-500 transition-colors">Services</button></li>
-                        <li><button onClick={() => scrollToSection('work')} className="hover:text-blue-500 transition-colors">Portfolio</button></li>
-                        <li><button onClick={() => scrollToSection('process')} className="hover:text-blue-500 transition-colors">Notre Process</button></li>
-                        <li><button onClick={() => scrollToSection('about')} className="hover:text-blue-500 transition-colors">À Propos</button></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 className="text-white font-bold mb-6">Social</h4>
-                    <div className="flex gap-4">
-                        <a href="https://www.instagram.com/abmmedia_?igsh=ZXdmYWp4M3pscmlk" target="_blank" className="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center hover:bg-blue-600 transition-all text-zinc-400 hover:text-white">
-                            <Instagram className="w-5 h-5" />
-                        </a>
-                        <a href="https://www.facebook.com/share/1QPqbBYruR/?mibextid=wwXIfr" target="_blank" className="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center hover:bg-blue-600 transition-all text-zinc-400 hover:text-white">
-                            <Facebook className="w-5 h-5" />
-                        </a>
-                        <a href="#" className="w-12 h-12 rounded-xl bg-zinc-900 border border-white/5 flex items-center justify-center hover:bg-blue-600 transition-all text-zinc-400 hover:text-white">
-                            <Linkedin className="w-5 h-5" />
-                        </a>
-                    </div>
-                </div>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-3">
+                <img src="/logonavbar.png" alt="ABM Media" className="h-8 w-auto brightness-0 invert opacity-50" />
             </div>
-            <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-zinc-600 text-sm">
-                <p>&copy; {new Date().getFullYear()} ABM Media. Tous droits réservés.</p>
-                <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span>Disponible pour de nouveaux projets</span>
-                </div>
+            <p className="text-zinc-600 text-sm">&copy; {new Date().getFullYear()} ABM Media. Global Agency.</p>
+            <div className="flex gap-4">
+                <a href="https://www.instagram.com/abmmedia_?igsh=ZXdmYWp4M3pscmlk" target="_blank" className="p-3 rounded-full bg-zinc-900 hover:bg-blue-600 transition-all">
+                    <Instagram className="w-5 h-5" />
+                </a>
             </div>
         </div>
       </footer>
